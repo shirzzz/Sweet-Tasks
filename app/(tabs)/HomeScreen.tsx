@@ -1,15 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import type { RootStackParamList } from './index'; // this must point to where your RootStackParamList is declared
 
-// Define your navigation param list types
-type RootStackParamList = {
-  Home: undefined;
-  WeekPlanner: undefined;
-  DayPlanner: { day: string };
-};
-
-// Define props type for this screen
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
@@ -33,7 +26,7 @@ export default function HomeScreen({ navigation }: Props) {
         <View key={day} style={styles.buttonGroup}>
           <Button
             title={`📅 ${day}`}
-            onPress={() => navigation.navigate('DayPlanner', { day })}
+            onPress={() => navigation.navigate(day as keyof RootStackParamList)}
             color="#c6c7ff"
           />
         </View>

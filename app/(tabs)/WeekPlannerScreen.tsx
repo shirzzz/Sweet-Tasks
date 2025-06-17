@@ -1,18 +1,44 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
-import React, { useState } from "react";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-    Alert,
-    Button,
-    FlatList,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  Button,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  SectionList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import type { RootStackParamList } from "./index";
 
-const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const colors = ["#B72828", "#FF9933", "#119B1F", "#119B1F", "#214ACE", "#972DD4", "#F36FD9"];
+type Props = NativeStackScreenProps<RootStackParamList, "WeekPlanner">;
+
+const days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+const colors = [  
+  "#B72828",
+  "#FF9933",
+  "#119B1F",
+  "#214ACE",
+  "#6C63FF",
+  "#972DD4",
+  "#F36FD9"
+];
+// Make sure colors array length aligns with days length. Adjust as preferred.
+
 const sweetQuotes = [
   "To infinity and beyond!",
   "If you can dream it you can do it!",
@@ -58,154 +84,301 @@ const sweetQuotes = [
   "Nobody can be uncheered with a balloon.",
   "People say nothing is impossible, but I do nothing every day",
 ];
+
 type Task = {
   id: string;
   text: string;
-  day: string;
+  day: string; // one of days[]
   color: string;
   completed: boolean;
 };
 
-export default function WeekPlannerScreen({navigation}: any) {
-  const [task, setTask] = useState('');
-  const [day, setDay] = useState("Sunday");
-  const [color, setColor] = useState(colors[0]);
+const STORAGE_KEY = "@WeekPlanner:tasks";
+
+export default function WeekPlannerScreen({ navigation }: Props) {
+  const [taskText, setTaskText] = useState("");
+  const [selectedDay, setSelectedDay] = useState(days[0]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
 
-function getColorForDay(day: string){
-    const index = days.indexOf(day);
-    if(index == -1) return "#FFFFFF";
-    return colors[index]
-}
+  // Utility: get color for a given day
+  const getColorForDay = (day: string) => {
+    const idx = days.indexOf(day);
+    return idx >= 0 && idx < colors.length ? colors[idx] : "#999";
+  };
 
+  // Load tasks from AsyncStorage on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const json = await AsyncStorage.getItem(STORAGE_KEY);
+        if (json) {
+          const parsed: unknown = JSON.parse(json);
+          if (Array.isArray(parsed)) {
+            setTasks(parsed as Task[]);
+          }
+        }
+      } catch (e) {
+        console.warn("Failed to load tasks:", e);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  // Save tasks to AsyncStorage whenever tasks change
+  useEffect(() => {
+    if (loading) return;
+    (async () => {
+      try {
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+      } catch (e) {
+        console.warn("Failed to save tasks:", e);
+      }
+    })();
+  }, [tasks, loading]);
+
+  // Add a new task
   const addTask = () => {
-    if (task.trim()) {
-      setTasks([
-        ...tasks,
-        {
-          id: Date.now().toString(),
-          text: task,
-          day,
-          color: getColorForDay(day),
-          completed: false,
-        },
-      ]);
-      setTask('');
+    const trimmed = taskText.trim();
+    if (!trimmed) {
+      Alert.alert("Empty Task", "Please enter a non-empty task");
+      return;
     }
+    const newTask: Task = {
+      id: Date.now().toString(),
+      text: trimmed,
+      day: selectedDay,
+      color: getColorForDay(selectedDay),
+      completed: false,
+    };
+    setTasks((prev) => [...prev, newTask]);
+    setTaskText("");
   };
 
+  // Toggle complete status
   const toggleComplete = (id: string) => {
-    setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
-      const randomQuote =
-        sweetQuotes[Math.floor(Math.random() * sweetQuotes.length)];
-      Alert.alert("✨ Great Job! ✨", randomQuote);
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === id
+          ? {
+              ...t,
+              completed: !t.completed,
+            }
+          : t
+      )
+    );
+    const randomQuote =
+      sweetQuotes[Math.floor(Math.random() * sweetQuotes.length)];
+    Alert.alert("✨ Great Job! ✨", randomQuote);
   };
 
+  // Delete a task
   const deleteTask = (id: string) => {
-    setTasks(tasks.filter(t => t.id !== id));
+    setTasks((prev) => prev.filter((t) => t.id !== id));
   };
+
+  // Prepare sections for SectionList: one section per day
+  const sections = days.map((d) => ({
+    title: d,
+    data: tasks.filter((t) => t.day === d),
+  }));
+
+  // Key extractor
+  const keyExtractor = useCallback((item: Task) => item.id, []);
+
+  // Render one task item
+  const renderItem = useCallback(
+    ({ item }: { item: Task }) => (
+      <View style={styles.taskItem}>
+        <TouchableOpacity
+          onPress={() => toggleComplete(item.id)}
+          style={[
+            styles.taskButton,
+            { backgroundColor: item.color },
+            item.completed && styles.taskButtonCompleted,
+          ]}
+        >
+          <Text
+            style={[
+              styles.taskText,
+              item.completed && styles.completedTaskText,
+            ]}
+          >
+            {item.text}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => deleteTask(item.id)}>
+          <Text style={styles.deleteButton}>❌</Text>
+        </TouchableOpacity>
+      </View>
+    ),
+    []
+  );
+
+  // Render section header
+  const renderSectionHeader = useCallback(
+    ({ section }: { section: { title: string; data: Task[] } }) => (
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionHeaderText}>{section.title}</Text>
+      </View>
+    ),
+    []
+  );
+
+  // If still loading from storage, we could return null or a loading indicator
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.loadingText}>Loading tasks...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>🗓 Plan Your Week</Text>
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.select({ ios: "padding", android: undefined })}
+        style={{ flex: 1 }}
+      >
+        <Text style={styles.title}>🗓 Plan Your Week</Text>
 
-      <TextInput
-        placeholder="New Task"
-        value={task}
-        onChangeText={setTask}
-        style={styles.input}
-        onSubmitEditing={addTask}
-        returnKeyType="done"
-      />
-
-      <View style={styles.pickers}>
-        <Picker
-          selectedValue={day}
-          onValueChange={setDay}
-          style={styles.picker}
-        >
-          {days.map(d => (
-            <Picker.Item key={d} label={d} value={d} />
-          ))}
-        </Picker>
-      </View>
-
-      <Button title="Add Task" onPress={addTask} color="#c6c7ff" />
-
-      <FlatList
-        data={tasks}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <View key={item.id} style={styles.taskItem}>
-            <TouchableOpacity
-              onPress={() => toggleComplete(item.id)}
-              style={[styles.taskButton, { backgroundColor: item.color }]}
+        <View style={styles.inputRow}>
+          <TextInput
+            placeholder="New Task"
+            value={taskText}
+            onChangeText={setTaskText}
+            style={styles.input}
+            onSubmitEditing={addTask}
+            returnKeyType="done"
+          />
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedDay}
+              onValueChange={setSelectedDay}
+              style={styles.picker}
             >
-              <Text
-                style={[styles.taskText, item.completed && styles.completedTask]}
-              >
-                {item.day}: {item.text}
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => deleteTask(item.id)}>
-              <Text style={styles.deleteButton}>❌</Text>
-            </TouchableOpacity>
+              {days.map((d) => (
+                <Picker.Item key={d} label={d} value={d} />
+              ))}
+            </Picker>
           </View>
-        )}
-      />
-    </View>
+        </View>
+
+        <View style={styles.addButton}>
+          <Button title="Add Task" onPress={addTask} color="#6C63FF" />
+        </View>
+
+        <SectionList
+          sections={sections}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          renderSectionHeader={renderSectionHeader}
+          contentContainerStyle={styles.listContent}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>
+                No tasks yet. Add one above!
+              </Text>
+            </View>
+          }
+        />
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 60,
     backgroundColor: "#fff",
+    paddingHorizontal: 16,
+    paddingTop: 20,
+  },
+  loadingText: {
+    marginTop: 50,
+    textAlign: "center",
+    fontSize: 16,
+    color: "#666",
   },
   title: {
     fontSize: 26,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 16,
+  },
+  inputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 12,
   },
   input: {
+    flex: 2,
     borderWidth: 1,
     borderColor: "#ccc",
-    padding: 10,
+    padding: 8,
     borderRadius: 5,
-    marginBottom: 10,
+    marginRight: 8,
   },
-  pickers: {
-    flexDirection: "row",
-    marginBottom: 10,
+  pickerContainer: {
+    flex: 1,
+    borderWidth: Platform.OS === "android" ? 1 : 0,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    overflow: "hidden",
   },
   picker: {
     flex: 1,
   },
+  addButton: {
+    marginBottom: 16,
+  },
+  listContent: {
+    paddingBottom: 40,
+  },
+  sectionHeader: {
+    backgroundColor: "#f0f0f0",
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+    marginTop: 12,
+  },
+  sectionHeaderText: {
+    fontSize: 18,
+    fontWeight: "600",
+  },
   taskItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginVertical: 6,
+    marginHorizontal: 4,
   },
   taskButton: {
     flex: 1,
     padding: 10,
     borderRadius: 5,
   },
+  taskButtonCompleted: {
+    opacity: 0.6,
+  },
   taskText: {
     fontSize: 16,
     color: "#fff",
   },
-  completedTask: {
+  completedTaskText: {
     textDecorationLine: "line-through",
-    opacity: 0.6,
   },
   deleteButton: {
     fontSize: 18,
-    marginLeft: 10,
+    marginLeft: 12,
     color: "#ff4444",
+  },
+  emptyContainer: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  emptyText: {
+    fontSize: 16,
+    color: "#666",
   },
 });

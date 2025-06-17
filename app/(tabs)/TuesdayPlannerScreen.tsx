@@ -1,15 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-    Alert,
-    Button,
-    FlatList,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  Button,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
+
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { RootStackParamList } from './index'; // or './App'
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Tuesday'>;
 
 const sweetQuotes = [
   "To infinity and beyond!",
@@ -73,17 +78,45 @@ type Task = {
   completed: boolean;
 };
 
+type AllTasks = Record<string, Task[]>;
+const STORAGE_KEY = `@WeekPlanner:tasks`;
 
-
-
-
-
-export default function DayPlannerScreen({ route }: any) {
+export default function TuesdayPlannerScreen({ route }: any) {
   // Safely get day param, fallback if undefined
-  const day = route?.params?.day ?? "Unknown Day";
-    const STORAGE_KEY = `@tasks_${day}`;
+  const day = "Tuesday";
+  
   const [task, setTask] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
+
+
+   // Load tasks for this day on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
+        if (jsonValue != null) {
+          const allTasks: AllTasks = JSON.parse(jsonValue);
+          setTasks(allTasks[day] || []);
+        }
+      } catch (e) {
+        console.warn("Error loading tasks:", e);
+      }
+    })();
+  }, [day]);
+
+  // Save tasks for this day on change
+  useEffect(() => {
+    (async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
+        const allTasks: AllTasks = jsonValue ? JSON.parse(jsonValue) : {};
+        allTasks[day] = tasks;
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(allTasks));
+      } catch (e) {
+        console.error("Error saving tasks:", e);
+      }
+    })();
+  }, [tasks, day]);
 
   // Add a new task only if input is not empty or whitespace
   const addTask = () => {
@@ -95,26 +128,7 @@ export default function DayPlannerScreen({ route }: any) {
       setTask(""); // clear input after adding
     }
   };
-  // Save tasks to AsyncStorage
-const saveTasks = async (tasksToSave: Task[]) => {
-  try {
-    const jsonValue = JSON.stringify(tasksToSave);
-    await AsyncStorage.setItem(STORAGE_KEY, jsonValue);
-  } catch (e) {
-    console.error("Error saving tasks:", e);
-  }
-};
 
-// Load tasks from AsyncStorage
-const loadTasks = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
-    return jsonValue != null ? JSON.parse(jsonValue) : [];
-  } catch (e) {
-    console.error("Error loading tasks:", e);
-    return [];
-  }
-};
   // Toggle task completed status
   const toggleCompleteTask = (id: string) => {
     setTasks((prevTasks) =>
