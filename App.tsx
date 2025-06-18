@@ -1,27 +1,27 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { registerRootComponent } from 'expo';
+import { registerRootComponent } from 'expo'; // ✅ ייבוא
 import React from 'react';
 
-import FridayPlannerScreen from './FridayPlannerScreen';
-import HomeScreen from './HomeScreen';
-import MondayPlannerScreen from './MondayPlannerScreen';
-import SaturdayPlannerScreen from './SaturdayPlannerScreen';
-import SundayPlannerScreen from './SundayPlannerScreen';
-import ThursdayPlannerScreen from './ThursdayPlannerScreen';
-import TuesdayPlannerScreen from './TuesdayPlannerScreen';
-import WednesdayPlannerScreen from './WednesdayPlannerScreen';
-import WeekPlannerScreen from './WeekPlannerScreen';
+import FridayPlannerScreen from './app/(tabs)/FridayPlannerScreen';
+import HomeScreen from './app/(tabs)/HomeScreen';
+import MondayPlannerScreen from './app/(tabs)/MondayPlannerScreen';
+import SaturdayPlannerScreen from './app/(tabs)/SaturdayPlannerScreen';
+import SundayPlannerScreen from './app/(tabs)/SundayPlannerScreen';
+import ThursdayPlannerScreen from './app/(tabs)/ThursdayPlannerScreen';
+import TuesdayPlannerScreen from './app/(tabs)/TuesdayPlannerScreen';
+import WednesdayPlannerScreen from './app/(tabs)/WednesdayPlannerScreen';
+import WeekPlannerScreen from './app/(tabs)/WeekPlannerScreen';
 
 export type RootStackParamList = {
-  Home: undefined
-  Sunday: undefined
-  Monday: undefined
-  Tuesday: undefined
-  Wednesday: undefined
-  Thursday: undefined
-  Friday: undefined
-  Saturday: undefined
+  Home: undefined;
+  Sunday: undefined;
+  Monday: undefined;
+  Tuesday: undefined;
+  Wednesday: undefined;
+  Thursday: undefined;
+  Friday: undefined;
+  Saturday: undefined;
   WeekPlanner: undefined;
 };
 
@@ -30,7 +30,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="WeekPlanner">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Sunday" component={SundayPlannerScreen} />
         <Stack.Screen name="Monday" component={MondayPlannerScreen} />
@@ -45,4 +45,5 @@ function App() {
   );
 }
 
+// 👇 מאוד חשוב: זה רושם את הקומפוננטה שלך בתור ה־entry של האפליקציה
 export default registerRootComponent(App);

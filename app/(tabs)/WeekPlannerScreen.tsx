@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Alert,
@@ -15,9 +14,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import type { RootStackParamList } from "./index";
+// import type { RootStackParamList } from "./.. .";
 
-type Props = NativeStackScreenProps<RootStackParamList, "WeekPlanner">;
+// type Props = NativeStackScreenProps<RootStackParamList, "WeekPlanner">;
 
 const days = [
   "Sunday",
@@ -95,7 +94,7 @@ type Task = {
 
 const STORAGE_KEY = "@WeekPlanner:tasks";
 
-export default function WeekPlannerScreen({ navigation }: Props) {
+export default function WeekPlannerScreen() {
   const [taskText, setTaskText] = useState("");
   const [selectedDay, setSelectedDay] = useState(days[0]);
   const [tasks, setTasks] = useState<Task[]>([]);

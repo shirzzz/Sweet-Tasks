@@ -11,10 +11,10 @@ import {
   View,
 } from "react-native";
 
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { RootStackParamList } from './index'; // or './App'
+// import { NativeStackScreenProps } from '@react-navigation/native-stack';
+// import type { RootStackParamList } from './index'; // or './App'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Wednesday'>;
+// type Props = NativeStackScreenProps<RootStackParamList, 'Wednesday'>;
 
 const sweetQuotes = [
   "To infinity and beyond!",

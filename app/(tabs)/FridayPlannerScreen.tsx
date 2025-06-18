@@ -12,7 +12,7 @@ import {
 } from "react-native";
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { RootStackParamList } from './index'; // or './App'
+import type { RootStackParamList } from './../../App.tsx'; // or './App'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Friday'>;
 
