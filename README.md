@@ -60,7 +60,6 @@ npm start
 -React Hooks – useState, useEffect, useMemo, useCallback for state & optimization
 
 # 📸 Screenshots
-<img width="319" height="925" alt="image" src="https://github.com/user-attachments/assets/518d118c-0936-42ed-9236-97a382d0ba36" />   <img width="319" height="925" alt="image" src="https://github.com/user-attachments/assets/dd085c61-9d88-44cf-81c6-130ebfbed1c2" />  <img width="205" height="925" alt="image" src="https://github.com/user-attachments/assets/ae52f14f-51f0-4f73-a53f-7296a4b345db" />
-
+<img width="319" height="925" alt="image" src="https://github.com/user-attachments/assets/518d118c-0936-42ed-9236-97a382d0ba36" />  <img width="205" height="1125" alt="image" src="https://github.com/user-attachments/assets/ae52f14f-51f0-4f73-a53f-7296a4b345db" /> <img width="319" height="925" alt="image" src="https://github.com/user-attachments/assets/dd085c61-9d88-44cf-81c6-130ebfbed1c2" />  
 
 
