@@ -53,10 +53,15 @@ npm start
 # 🛠️ Tools & Libraries
 
 -React Native – UI framework
+
 -TypeScript – type safety
+
 -AsyncStorage (@react-native-async-storage/async-storage) – local storage for tasks
+
 -Picker (@react-native-picker/picker) – day selection dropdown
+
 -SectionList – grouped tasks by day
+
 -React Hooks – useState, useEffect, useMemo, useCallback for state & optimization
 
 # 📸 Screenshots
