@@ -1,6 +1,5 @@
-# Welcome to your Expo app 👋
+# Sweet-Tasks <img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/56a004bd-56d9-4290-8e47-bcd1fb81c255" />
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 ## Get started
 
