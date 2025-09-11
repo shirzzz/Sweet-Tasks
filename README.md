@@ -1,10 +1,8 @@
 # Sweet-Tasks <img width="200" height="200" alt="image" src="https://github.com/user-attachments/assets/56a004bd-56d9-4290-8e47-bcd1fb81c255" />
-
+---
 A simple and colorful React Native week planner that helps you organize your tasks by day.
 Each completed task rewards you with a random motivational quote 🎉.
 Tasks are saved locally using AsyncStorage, so they persist even after closing the app.
----
-
 ## ✨ Features
 
 📅 Weekly View – plan tasks for all 7 days of the week
@@ -62,7 +60,7 @@ npm start
 -React Hooks – useState, useEffect, useMemo, useCallback for state & optimization
 
 # 📸 Screenshots
-<img width="519" height="1125" alt="image" src="https://github.com/user-attachments/assets/518d118c-0936-42ed-9236-97a382d0ba36" />   <img width="519" height="1125" alt="image" src="https://github.com/user-attachments/assets/dd085c61-9d88-44cf-81c6-130ebfbed1c2" />  <img width="405" height="1125" alt="image" src="https://github.com/user-attachments/assets/ae52f14f-51f0-4f73-a53f-7296a4b345db" />
+<img width="319" height="925" alt="image" src="https://github.com/user-attachments/assets/518d118c-0936-42ed-9236-97a382d0ba36" />   <img width="319" height="925" alt="image" src="https://github.com/user-attachments/assets/dd085c61-9d88-44cf-81c6-130ebfbed1c2" />  <img width="205" height="925" alt="image" src="https://github.com/user-attachments/assets/ae52f14f-51f0-4f73-a53f-7296a4b345db" />
 
 
 
