@@ -1,49 +1,68 @@
 # Sweet-Tasks <img width="200" height="200" alt="image" src="https://github.com/user-attachments/assets/56a004bd-56d9-4290-8e47-bcd1fb81c255" />
 
+A simple and colorful React Native week planner that helps you organize your tasks by day.
+Each completed task rewards you with a random motivational quote 🎉.
+Tasks are saved locally using AsyncStorage, so they persist even after closing the app.
+---
 
-## Get started
+## ✨ Features
 
-1. Install dependencies
+📅 Weekly View – plan tasks for all 7 days of the week
+🎨 Day-based Colors – tasks get a unique background color depending on the day
+✅ Task Completion – mark tasks as complete with a single tap
+💬 Motivational Quotes – get inspired when completing tasks
+❌ Delete Tasks – remove tasks easily
+💾 Persistent Storage – tasks are saved with AsyncStorage
 
-   ```bash
-   npm install
-   ```
+WeekPlanner/
+│── WeekPlannerScreen.tsx   # Main screen component
+│── package.json
+│── README.md
 
-2. Start the app
 
-   ```bash
-   npx expo start
-   ```
+🚀 Getting Started
+Prerequisites
 
-In the output, you'll find options to open the app in a
+Make sure you have the following installed:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Node.js
+ (LTS recommended)
+React Native CLI
+ or Expo CLI
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Android Studio / Xcode (for emulator) OR a physical device
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+# Installation
 ```
+# Clone this repository
+git clone https://github.com/your-username/week-planner.git
+cd week-planner
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+# Install dependencies
+npm install
+# or
+yarn install
 
-## Learn more
+# Run on Android
+npm run android
 
-To learn more about developing your project with Expo, look at the following resources:
+# Run on iOS
+npm run ios
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+# Run with Expo
+npm start
+```
+# 🛠️ Tools & Libraries
 
-## Join the community
+-React Native – UI framework
+-TypeScript – type safety
+-AsyncStorage (@react-native-async-storage/async-storage) – local storage for tasks
+-Picker (@react-native-picker/picker) – day selection dropdown
+-SectionList – grouped tasks by day
+-React Hooks – useState, useEffect, useMemo, useCallback for state & optimization
 
-Join our community of developers creating universal apps.
+# 📸 Screenshots
+<img width="519" height="1125" alt="image" src="https://github.com/user-attachments/assets/518d118c-0936-42ed-9236-97a382d0ba36" />   <img width="519" height="1125" alt="image" src="https://github.com/user-attachments/assets/dd085c61-9d88-44cf-81c6-130ebfbed1c2" />  <img width="405" height="1125" alt="image" src="https://github.com/user-attachments/assets/ae52f14f-51f0-4f73-a53f-7296a4b345db" />
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
