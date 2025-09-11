@@ -1,4 +1,4 @@
-# Sweet-Tasks <img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/56a004bd-56d9-4290-8e47-bcd1fb81c255" />
+# Sweet-Tasks <img width="20" height="20" alt="image" src="https://github.com/user-attachments/assets/56a004bd-56d9-4290-8e47-bcd1fb81c255" />
 
 
 ## Get started
